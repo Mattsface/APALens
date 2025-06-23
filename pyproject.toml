@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pool-apa-team-rankings"
+version = "0.1.0"
+description = "A Flask application for pool APA team rankings"
+readme = "README.md"
+requires-python = ">=3.8"
+authors = [
+    {name = "Matthew Spah", email = "spahmatthew@gmail.com"}
+]
+dependencies = [
+    "Flask>=3.0.0",
+    "Werkzeug>=3.0.1",
+]
+
+[project.scripts]
+pool-apa-team-rankings = "src.app:app"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*"]
+
+[tool.setuptools.package-data]
+src = ["templates/*", "static/*"] 
