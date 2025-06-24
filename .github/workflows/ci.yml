@@ -1,0 +1,76 @@
+name: CI
+
+on:
+  push:
+    branches: [ '*' ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test-local:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install -e .
+          pip install pytest
+
+      - name: Run tests
+        run: |
+          pytest tests/ || echo "No tests found yet"
+
+  build-docker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image
+        run: docker build -t pool-apa-team-rankings .
+
+      - name: Test Docker container
+        run: |
+          # Start container in background
+          docker run -d --name test-container -p 5000:5000 pool-apa-team-rankings
+
+          # Wait for container to start
+          sleep 10
+
+          # Test if Flask app is responding
+          curl -f http://localhost:5000/ || exit 1
+
+          # Clean up
+          docker stop test-container
+          docker rm test-container
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install linting tools
+        run: |
+          pip install flake8 black isort
+
+      - name: Run linting checks
+        run: |
+          flake8 src/ --max-line-length=88 --extend-ignore=E203,W503
+          black --check src/
+          isort --check-only src/

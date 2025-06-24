@@ -19,9 +19,26 @@ dependencies = [
 [project.scripts]
 pool-apa-team-rankings = "src.app:app"
 
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "flake8>=7.0.0",
+    "black>=23.12.0",
+    "isort>=5.13.0",
+    "pre-commit>=3.6.0",
+]
+
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["src*"]
 
 [tool.setuptools.package-data]
-src = ["templates/*", "static/*"] 
+src = ["templates/*", "static/*"]
+
+[tool.black]
+line-length = 88
+target-version = ['py312']
+
+[tool.isort]
+profile = "black"
+line_length = 88
