@@ -22,7 +22,7 @@ jobs:
         run: |
           pip install -e .
           pip install pytest
-      
+
       - name: Run tests
         run: |
           pytest tests/ || echo "No tests found yet"
@@ -43,13 +43,13 @@ jobs:
         run: |
           # Start container in background
           docker run -d --name test-container -p 5000:5000 pool-apa-team-rankings
-          
+
           # Wait for container to start
           sleep 10
-          
+
           # Test if Flask app is responding
           curl -f http://localhost:5000/ || exit 1
-          
+
           # Clean up
           docker stop test-container
           docker rm test-container
