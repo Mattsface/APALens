@@ -26,8 +26,6 @@ class HttpResult:
         self.message = str(message)
 
         self.data = data
-        if "copyright" in data:
-            del data["copyright"]
 
 
 class HttpAdapter:
@@ -48,12 +46,21 @@ class HttpAdapter:
 
     def __init__(
         self,
+        ver: str = None,
+        base_url: str = None,
         hostname: str = "api.example.com",
-        ver: str = "v1",
         protocol: str = "https",
         logger: logging.Logger = None,
     ):
-        self.url = f"{protocol}://{hostname}/api/{ver}/"
+        if base_url and ver:
+            self.url = f"{protocol}://{hostname}/{base_url}/{ver}/"
+        elif base_url:
+            self.url = f"{protocol}://{hostname}/{base_url}/"
+        elif ver:
+            self.url = f"{protocol}://{hostname}/{ver}/"
+        else:
+            self.url = f"{protocol}://{hostname}/"
+
         self._logger = logger or logging.getLogger(__name__)
         self._logger.setLevel(logging.DEBUG)
 
@@ -218,18 +225,35 @@ class GraphQLAdapter:
 
     def __init__(
         self,
+        ver: str = None,
+        base_url: str = None,
         hostname: str = "gql.poolplayers.com",
-        ver: str = "v1",
         protocol: str = "https",
         logger: logging.Logger = None,
     ):
         self._logger = logger or logging.getLogger(__name__)
         self._logger.setLevel(logging.DEBUG)
 
-        # Use HttpAdapter for HTTP communication
-        self.http_adapter = HttpAdapter(
-            hostname=hostname, ver=ver, protocol=protocol, logger=logger
-        )
+        if base_url and ver:
+            self.http_adapter = HttpAdapter(
+                hostname=hostname,
+                ver=ver,
+                base_url=base_url,
+                protocol=protocol,
+                logger=logger,
+            )
+        elif base_url:
+            self.http_adapter = HttpAdapter(
+                hostname=hostname, base_url=base_url, protocol=protocol, logger=logger
+            )
+        elif ver:
+            self.http_adapter = HttpAdapter(
+                hostname=hostname, ver=ver, protocol=protocol, logger=logger
+            )
+        else:
+            self.http_adapter = HttpAdapter(
+                hostname=hostname, protocol=protocol, logger=logger
+            )
 
     def query(
         self, query: str, variables: Dict = None, operation_name: str = None
