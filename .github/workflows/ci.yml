@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  test-local:
+  test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
@@ -21,11 +21,11 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -e .
-          pip install pytest
+          pip install pytest pytest-cov
 
       - name: Run tests
         run: |
-          pytest tests/ || echo "No tests found yet"
+          python -m pytest tests/ -v
 
   build-docker:
     runs-on: ubuntu-latest
