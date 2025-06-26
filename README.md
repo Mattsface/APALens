@@ -12,15 +12,11 @@ A Flask web application for viewing APA (American Poolplayers Association) team 
 # Install and run
 pip install -e .
 export APA_REFRESH_TOKEN="your-apa-refresh-token"
-export APA_ACCESS_TOKEN="your-apa-access-token"
 python -m flask run
 
 # Or with Docker
 docker build -t apalens .
-docker run -p 5000:5000 \
-  -e APA_REFRESH_TOKEN=your-apa-refresh-token \
-  -e APA_ACCESS_TOKEN=your-apa-access-token \
-  apalens
+docker run -p 5000:5000 -e APA_REFRESH_TOKEN=your-apa-refresh-token apalens
 ```
 
 ## Contributing

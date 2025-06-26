@@ -4,17 +4,15 @@ FROM python:3.11-slim
 # Set working directory in container
 WORKDIR /app
 
-# Set build arguments for tokens
+# Set build argument for refresh token
 ARG APA_REFRESH_TOKEN
-ARG APA_ACCESS_TOKEN
 
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     FLASK_APP=src/app.py \
     FLASK_ENV=production \
-    APA_REFRESH_TOKEN=${APA_REFRESH_TOKEN} \
-    APA_ACCESS_TOKEN=${APA_ACCESS_TOKEN}
+    APA_REFRESH_TOKEN=${APA_REFRESH_TOKEN}
 
 # Install system dependencies
 RUN apt-get update \
