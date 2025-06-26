@@ -16,7 +16,9 @@ python -m flask run
 
 # Or with Docker
 docker build -t apalens .
-docker run -p 5000:5000 apalens
+docker run -p 5000:5000 \
+  -e APA_REFRESH_TOKEN=your-apa-refresh-token \
+  apalens
 ```
 
 ## Contributing
